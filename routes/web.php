@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminConrtoller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,4 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'login', [AdminCon]);
+Route::view('/', 'login')->name('admin_login');
+Route::post('auth', [AdminConrtoller::class, 'auth'])->name('adminAuth');
+
+Route::middleware(['admin_role'])->group(function () {
+    Route::get('home', [AdminConrtoller::class,'home'])->name('home');
+    Route::post('add-new', [AdminConrtoller::class, 'add'])->name('add');
+});
