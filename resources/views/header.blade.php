@@ -60,7 +60,7 @@
             </div>
             <div class="navbar-nav w-100">
                 <a href="{{ route('home') }}" class="nav-item nav-link"><i class="bi bi-geo-alt-fill"></i> Poliklinikalar</a>
-                <a href="form.html" class="nav-item nav-link"><i class="bi bi-sliders"></i> Sozlamalar</a>
+                <a href="{{ route('settings') }}" class="nav-item nav-link"><i class="bi bi-sliders"></i> Sozlamalar</a>
             </div>
         </nav>
     </div>
@@ -89,8 +89,8 @@
                         <span class="d-none d-lg-inline-flex">Admin</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                        <a href="#" class="dropdown-item">Settings</a>
-                        <a href="#" class="dropdown-item">Log Out</a>
+                        <a href="{{ route('settings') }}" class="dropdown-item">Settings</a>
+                        <a href="{{ route('logout') }}" class="dropdown-item">Log Out</a>
                     </div>
                 </div>
             </div>

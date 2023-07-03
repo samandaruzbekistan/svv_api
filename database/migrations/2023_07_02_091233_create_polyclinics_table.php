@@ -26,6 +26,8 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7); // Precision: 10, Scale: 7
             $table->decimal('longitude', 10, 7); // Precision: 10, Scale: 7
             $table->timestamps();
+
+            $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
         });
     }
 

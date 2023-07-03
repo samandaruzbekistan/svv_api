@@ -5,16 +5,29 @@
     @if((session()->has('backData')))
         @switch(session('backData'))
             @case(1)
-                 <div class="container-fluid pt-4 px-4" id="data">
+                <div class="container-fluid pt-4 px-4" >
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Muvaffaqiyatli!</strong> Ma'lumot kiritildi.
+                        <strong>Muvaffaqiyatli!</strong> Ma'lumot qo'shildi.
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                 </div>
+                </div>
                 @break
 
             @case(2)
-                Second case...
+                <div class="container-fluid pt-4 px-4" >
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Muvaffaqiyatli!</strong> Ma'lumot o'childi.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+                @break
+            @case(3)
+                <div class="container-fluid pt-4 px-4" >
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Muvaffaqiyatli!</strong> Ma'lumot o'zgartirildi.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
                 @break
 
             @default
@@ -24,52 +37,65 @@
 
     <!-- Blank Start -->
     <div class="container-fluid pt-4 px-4" id="data">
-        <div class="accordion" id="accordionExample">
-            @foreach($data as $id => $region)
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{ $id }}" aria-expanded="true" aria-controls="collapseOne">
-                            {{ $region->name_uz }}
-                        </button>
-                    </h2>
-                    <div id="collapseOne{{ $id }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Tuman ID</th>
-                                    <th scope="col">Nomi</th>
-                                    <th scope="col">Poliklikalar soni</th>
-                                    <th scope="col">Qo'shish</th>
-                                    <th scope="col">Ko'rish</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($region->districts as $item)
-                                <tr>
-                                    <th scope="row">{{ $item->id }}</th>
-                                    <td>{{ $item->name_uz }}</td>
-                                    <td>{{ $item->polyclinics_count }}</td>
-                                    <td><button id="{{ $item->id }}" class="btn btn-square btn-warning m-2 add-btn"><i class="bi bi-plus-circle"></i></button></td>
-                                    <td><a href="{{ route('polyclinics', ['district_id' => $item->id]) }}" class="btn btn-square btn-primary m-2"><i class="bi bi-eye"></i></a></td>
-                                </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+        <div class="bg-light rounded h-100 p-4">
+            <div class="row justify-content-between">
+                <div class="col-md-4"><h6 class="mb-4">{{ $district->name_uz }} | {{ $district->polyclinics_count }} ta</h6></div>
+                <div class="col-md-2"><button type="button" class="btn btn-sm add-btn btn-primary">Yangi qo'shish +</button></div>
+            </div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nomi</th>
+                    <th scope="col">Manzil</th>
+                    <th scope="col">Mo'ljal</th>
+                    <th scope="col">Telefon</th>
+                    <th scope="col">Ish vaqti</th>
+                    <th scope="col">Bo'limlar</th>
+                    <th scope="col">Kenglik</th>
+                    <th scope="col">Uzunlik</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($polyclinics as $item)
+                    <tr>
+                        <th scope="row">{{ $item->id }}</th>
+                        <td>{{ $item->name_uz }} / {{ $item->name_ru }} / {{ $item->name_en }}</td>
+                        <td>{{ $item->address_uz }} / {{ $item->address_ru }} / {{ $item->address_en }}</td>
+                        <td>{{ $item->target_uz }} / {{ $item->target_ru }} / {{ $item->target_en }}</td>
+                        <td>{{ $item->phone }}</td>
+                        <td>{{ $item->work_time }}</td>
+                        <td>{{ $item->departments_uz }} / {{ $item->departments_ru }} / {{ $item->departments_en }}</td>
+                        <td>{{ $item->latitude }}</td>
+                        <td>{{ $item->longitude }}</td>
+                        <td><a href="{{ route('edit', ['polyclinic_id' => $item->id]) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"></i></a></td>
+                        <td>
+                            {!! Form::open(['method' => 'DELETE', 'route' => ['delete', $item->id]]) !!}
+                                <input type="hidden" name="district_id" value="{{ $district->id }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                            {!! Form::close() !!}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+            @if(count($polyclinics) == 0)
+                <h5 class="text-danger">Poliklinikalar mavjud emas!</h5>
+            @endif
         </div>
     </div>
     <!-- Blank End -->
+
 
     <div class="container-fluid pt-4 px-4" id="forma" style="display: none">
         <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Yangi tashkilot qo'shish</h6>
             <form action="{{ route('add') }}" method="post">
                 @csrf
-                <input type="hidden" id="district_id" name="district_id" value="0">
+                <input type="hidden" id="district_id" name="district_id" value="{{ $district->id }}">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Nomi uz<sup class="text-danger">*</sup></label>
                     <input type="text" name="name_uz" required class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -141,18 +167,12 @@
             </form>
         </div>
     </div>
-
-
-
-
 @endsection
 
 
 @section('js')
     <script>
         $(document).on('click', '.add-btn', function() {
-            let districtID = $(this).attr('id');
-            $("#district_id").val(districtID);
             $('#data').hide();
             $('#forma').show();
         });
